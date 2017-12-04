@@ -3,6 +3,7 @@ package birdhunter
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 )
 
@@ -18,8 +19,12 @@ func client(c HTTPClient, b interface{}) (resp *http.Response, err error) {
 		body,
 	)
 
-	if c.Content_type != "" {
-		req.Header.Add("Content_type", c.Content_type)
+	if c.ContentType != "" {
+		req.Header.Add("Content-Type", c.ContentType)
+	}
+
+	if c.ContentLanguage != "" {
+		req.Header.Add("Content-Language", c.ContentLanguage)
 	}
 
 	for _, cookie := range c.Cookies {
@@ -27,6 +32,12 @@ func client(c HTTPClient, b interface{}) (resp *http.Response, err error) {
 	}
 
 	return cl.Do(req)
+}
+
+func getJson(body io.ReadCloser, target interface{}) error {
+	defer body.Close()
+
+	return json.NewDecoder(body).Decode(target)
 }
 
 func NewClient() {

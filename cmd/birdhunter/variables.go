@@ -19,6 +19,12 @@ var (
 		"Run forever the boot (DEFAULT `false`)",
 	)
 
+	popular = flag.Bool(
+		"popular",
+		false,
+		"Like popular feed",
+	)
+
 	tags = flag.String(
 		"tags",
 		"",

@@ -8,11 +8,13 @@ var (
 	like_url_tmpl      = "https://www.instagram.com/web/likes/%v/like/"
 	unlike_url_tmpl    = "https://www.instagram.com/web/likes/%v/unlike/"
 	tag_url            = "https://www.instagram.com/explore/tags/%v/?__a=1"
+	pic_url            = "https://www.instagram.com/p/%v"
 
 	//info
-	user_agent      = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-	accept_language = "es-ES,es;q=0.8,en-US;q=0.6,en;q=0.4"
-	x_www_form      = "application/x-www-form-urlencoded"
+	user_agent       = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+	accept_language  = "es-ES,es"
+	x_www_form       = "application/x-www-form-urlencoded"
+	application_json = "application/json"
 
 	c = Client{}
 )

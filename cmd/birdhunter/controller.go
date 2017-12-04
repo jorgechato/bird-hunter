@@ -5,13 +5,15 @@ import (
 	"sync"
 
 	"github.com/ahmdrz/goinsta/response"
+	"github.com/jorgechato/birdhunter/birdhunter"
 	"gopkg.in/ahmdrz/goinsta.v1"
 )
 
 var (
 	wg      sync.WaitGroup
 	mu      sync.Mutex // guards balance
-	balance int
+	balance = 0
+	liked   = []string{}
 )
 
 func (c *Client) login() {
@@ -25,9 +27,6 @@ func (c *Client) login() {
 }
 
 func (c *Client) getTagIds() {
-	client.login()
-	balance = 0
-
 	wg.Add(len(c.Tags))
 
 	for _, tag := range c.Tags {
@@ -40,6 +39,28 @@ func (c *Client) getTagIds() {
 	wg.Wait()
 }
 
+func (c *Client) getPopularIds() {
+	media, _ := insta.GetPopularFeed()
+
+	likePopularMedia(media.Items)
+}
+
+func likePopularMedia(list []response.Item) {
+	for _, item := range list {
+		if !item.HasLiked && item.LikeCount > likes.Minimum {
+			mu.Lock()
+			balance++
+			if balance <= likes.NLikes {
+				liked = append(liked, birdhunter.Slug(item.Code))
+				insta.Like(item.ID)
+			} else {
+				break
+			}
+			mu.Unlock()
+		}
+	}
+}
+
 func likeMedia(list []response.MediaItemResponse) {
 	defer wg.Done()
 
@@ -48,12 +69,19 @@ func likeMedia(list []response.MediaItemResponse) {
 			mu.Lock()
 			balance++
 			if balance <= likes.NLikes {
-				fmt.Println(item.Code)
+				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
 			} else {
 				break
 			}
 			mu.Unlock()
 		}
+	}
+}
+
+func printOut() {
+	fmt.Printf("\nTotal likes: %d\n\n", len(liked))
+	for _, item := range liked {
+		fmt.Println(item)
 	}
 }

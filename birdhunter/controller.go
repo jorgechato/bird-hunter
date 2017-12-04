@@ -1,18 +1,37 @@
 package birdhunter
 
+import "fmt"
+
 func Login(user string, pass string) {
 	c.Name = user
 	c.Password = pass
 
 	client(
 		HTTPClient{
-			Url:          login_url,
-			Method:       "POST",
-			Content_type: x_www_form,
-			Cookies:      c.Cookies,
+			Url:         login_url,
+			Method:      "POST",
+			ContentType: x_www_form,
+			Cookies:     c.Cookies,
 		},
 		c,
 	)
 }
 
-//TODO: get list of items by hashtag
+func GetItemsByTag(tag string) (Target, error) {
+	url := fmt.Sprintf(tag_url, tag)
+
+	res, err := client(
+		HTTPClient{
+			Url:             url,
+			Method:          "GET",
+			ContentType:     application_json,
+			ContentLanguage: accept_language,
+		},
+		nil,
+	)
+
+	body := Body{}
+	err = getJson(res.Body, &body)
+
+	return body.Target, err
+}
