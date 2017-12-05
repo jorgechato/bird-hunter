@@ -32,19 +32,19 @@ var (
 	)
 
 	user = flag.String(
-		"user",
+		"u",
 		"",
 		"Instagram `username`",
 	)
 
 	pass = flag.String(
-		"pass",
+		"p",
 		"",
 		"Instagram `password`",
 	)
 
 	nlikes = flag.Int(
-		"nlikes",
+		"likes",
 		60,
 		"Maximum number of likes per hour (e.g., `60`)",
 	)

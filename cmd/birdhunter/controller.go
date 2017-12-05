@@ -12,7 +12,7 @@ import (
 var (
 	wg      sync.WaitGroup
 	mu      sync.Mutex // guards balance
-	balance = 0
+	balance = 1
 	liked   = []string{}
 )
 
@@ -27,9 +27,8 @@ func (c *Client) login() {
 }
 
 func (c *Client) getTagIds() {
-	wg.Add(len(c.Tags))
-
 	for _, tag := range c.Tags {
+		wg.Add(2)
 		media, _ := insta.TagFeed(tag)
 
 		go likeMedia(media.RankedItems)
@@ -48,15 +47,11 @@ func (c *Client) getPopularIds() {
 func likePopularMedia(list []response.Item) {
 	for _, item := range list {
 		if !item.HasLiked && item.LikeCount > likes.Minimum {
-			mu.Lock()
-			balance++
 			if balance <= likes.NLikes {
 				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
-			} else {
-				break
+				balance++
 			}
-			mu.Unlock()
 		}
 	}
 }
@@ -67,12 +62,10 @@ func likeMedia(list []response.MediaItemResponse) {
 	for _, item := range list {
 		if !item.HasLiked && item.LikeCount > likes.Minimum {
 			mu.Lock()
-			balance++
 			if balance <= likes.NLikes {
 				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
-			} else {
-				break
+				balance++
 			}
 			mu.Unlock()
 		}
