@@ -16,19 +16,22 @@ var (
 )
 
 func login() {
+	log.Info("New login to Instagram")
+
 	insta = goinsta.New(
 		client.Username,
 		client.Password,
 	)
 
 	if err := insta.Login(); err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
 	insta.SyncFeatures()
 }
 
 func getTagIds() {
+	balance = 1
 	for _, tag := range client.Tags {
 		wg.Add(2)
 		media, _ := insta.TagFeed(tag)
@@ -61,11 +64,16 @@ func likeMedia(list []response.MediaItemResponse) {
 	defer wg.Done()
 
 	for _, item := range list {
-		if !item.HasLiked && item.LikeCount > likes.InPhoto {
+		user, _ := insta.GetUserByID(item.User.ID)
+		following := user.User.FollowingCount
+
+		if !item.HasLiked && item.LikeCount > likes.InPhoto && following < 1000 {
 			mu.Lock()
 			if balance <= likes.Number {
 				insta.Like(item.ID)
 				balance++
+
+				log.Info("Liked: ", birdhunter.Slug(item.Code))
 			}
 			mu.Unlock()
 		}
@@ -73,12 +81,14 @@ func likeMedia(list []response.MediaItemResponse) {
 }
 
 func updateConfig(url string) {
-	birdhunter.Client(
+	res, _ := birdhunter.Client(
 		birdhunter.HTTPClient{
 			Url:         url,
 			Method:      "POST",
-			ContentType: birdhunter.application_json,
+			ContentType: birdhunter.Text_plain,
 		},
 		nil,
 	)
+
+	fmt.Print(res.Status)
 }

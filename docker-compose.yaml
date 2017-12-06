@@ -12,3 +12,4 @@ services:
       - 3888:8080
     volumes:
       - ./config.yaml:/config.yaml
+      - ./out:/out

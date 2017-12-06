@@ -44,11 +44,11 @@ func tagReq() {
 }
 
 func foreverReq() {
-	httpCommon(foreverCommand, 8080)
+	httpCommon(foreverCommand, "0.0.0.0:8080")
 }
 
 func updateReq() {
-	httpCommon(updateCommand, 3888)
+	httpCommon(updateCommand, "http://localhost:3888")
 }
 
 func credentialCommon(command *flag.FlagSet) {
@@ -83,11 +83,11 @@ func likeCommon(command *flag.FlagSet) {
 	)
 }
 
-func httpCommon(command *flag.FlagSet, port int) {
+func httpCommon(command *flag.FlagSet, gateway string) {
 	command.StringVar(
 		&httpAddrPtr,
 		"http",
-		fmt.Sprintf("0.0.0.0:%d", port),
+		gateway,
 		"HTTP service address (e.g., `localhost:8080`)",
 	)
 }

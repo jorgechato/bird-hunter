@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/robfig/cron"
 )
 
 func start(gateway string) {
@@ -13,7 +13,8 @@ func start(gateway string) {
 	routes.HandleFunc("/update", updateHandler).
 		Methods("POST")
 
-	log.Fatal(http.ListenAndServe(gateway, routes))
+	log.Info("Server running on ", gateway)
+	log.Panic(http.ListenAndServe(gateway, routes))
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +22,24 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}()
 
-	readYaml(*configFilePtr, &yamlOpt)
+	crono.Stop()
+
+	log.Info("Configuration file config.yaml updated successfully.")
+
+	insta.Logout()
+	go forever()
 	w.WriteHeader(http.StatusOK)
+}
+
+func schedule() {
+	crono = cron.New()
+
+	crono.AddFunc(
+		yamlOpt.Daemon.Interval,
+		func() {
+			getTagIds()
+		},
+	)
+
+	crono.Start()
 }

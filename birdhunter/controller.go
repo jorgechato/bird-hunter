@@ -24,7 +24,7 @@ func GetItemsByTag(tag string) (Target, error) {
 		HTTPClient{
 			Url:             url,
 			Method:          "GET",
-			ContentType:     application_json,
+			ContentType:     Application_json,
 			ContentLanguage: accept_language,
 		},
 		nil,

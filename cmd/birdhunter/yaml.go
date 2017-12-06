@@ -8,9 +8,9 @@ import (
 
 func readYaml(path string, target interface{}) error {
 	isFile(path)
-	yamlFile := ioutil.ReadFile(path)
+	yamlFile, _ := ioutil.ReadFile(path)
 
-	return yaml.Ummarshal(yamlFile, target)
+	return yaml.Unmarshal(yamlFile, target)
 }
 
 func isFile(path string) error {

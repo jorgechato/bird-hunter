@@ -14,19 +14,15 @@ type Likes struct {
 }
 
 type YamlOpt struct {
-	Client Client `yaml:"client"`
+	Client Client `yaml:"credentials"`
 	Daemon Daemon `yaml:"daemon"`
 }
 
 type Daemon struct {
-	InPhoto int `yaml:"min-likes-x-photo"`
-	Iter    Iter
-}
-
-type Iter struct {
-	Tags  []string `yaml:"tags"`
-	Likes int      `yaml:"likes"`
-	Hour  string   `yaml:"hour"`
+	InPhoto  int      `yaml:"min-likes-x-photo"`
+	Interval string   `yaml:"interval"`
+	Likes    int      `yaml:"likes"`
+	Tags     []string `yaml:"tags"`
 }
 
 func NewClient(user string, pass string, tags string) {
@@ -34,6 +30,14 @@ func NewClient(user string, pass string, tags string) {
 		Username: user,
 		Password: pass,
 		Tags:     strings.Split(tags, ","),
+	}
+}
+
+func setClient(user string, pass string, tags []string) {
+	client = Client{
+		Username: user,
+		Password: pass,
+		Tags:     tags,
 	}
 }
 

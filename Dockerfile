@@ -1,10 +1,11 @@
 FROM golang:latest
 
-RUN mkdir /birdhunter
-WORKDIR /birdhunter
-ADD . /birdhunter
-RUN go install /birdhunter/cmd/birdhunter
+WORKDIR /go/src/github.com/jorgechato/birdhunter
+ADD . .
 
-ENTRYPOINT /go/bin/birdhunter forever -notify
+RUN go get -v ./...
+RUN go install ./cmd/birdhunter
+
+ENTRYPOINT /go/bin/birdhunter forever
 
 EXPOSE 8080

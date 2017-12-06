@@ -18,7 +18,9 @@ $ docker build -t birdhunter .
 
 $ docker run -d \
 -p 3888:8080 \
---name like-birdhunter\
+-v {PWD}/config.yaml:/config.yaml \
+-v {PWD}/out:/out \
+--name like-birdhunter \
 birdhunter
 
 # or
@@ -59,9 +61,16 @@ forever
         Config file location (default "/config.yaml")
   -http localhost:8080
         HTTP service address (e.g., localhost:8080) (default "0.0.0.0:8080")
+  -notify
+        Will notify to your telegram chat the status of the bot
+
+update
+  -http localhost:8080
+        HTTP service address (e.g., localhost:8080) (default "http://localhost:3888")
 ```
 
 ## Variables
+Create a file ./config/config.yaml.
 Variables in config.yaml file. In order to request a valid TOKEN create a bot and you will get the ID if you visit https://api.telegram.org/bot<TOKEN>/getUpdates.
 ```zsh
 credentials:
@@ -74,24 +83,9 @@ notify:
 
 daemon:
   min-likes-x-photo: 20
-  - tags:
+  interval: "@every 3h30m"
+  likes: 60
+  tags:
       - ""
       - ""
-    hour: "07:00"
-    likes: 60
-  - tags:
-      - ""
-      - ""
-    hour: "10:00"
-    likes: 60
-  - tags:
-      - ""
-      - ""
-    hour: "20:00"
-    likes: 60
-  - tags:
-      - ""
-      - ""
-    hour: "22:00"
-    likes: 60
 ```

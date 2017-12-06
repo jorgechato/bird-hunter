@@ -36,6 +36,7 @@ func handler() {
 		foreverCommand.Parse(os.Args[2:])
 
 		forever()
+		start(httpAddrPtr)
 	default:
 		printDefaults()
 	}
@@ -61,7 +62,7 @@ func tag() {
 	NewClient(
 		usernamePtr,
 		passwordPtr,
-		"",
+		*listTagsPtr,
 	)
 	NewLikes(
 		likesPtr,
@@ -83,5 +84,21 @@ func update() {
 }
 
 func forever() {
-	start(httpAddrPtr)
+	if e := readYaml(*configFilePtr, &yamlOpt); e != nil {
+		log.Error("Not be able to update the config.yanl file.")
+	}
+
+	setClient(
+		yamlOpt.Client.Username,
+		yamlOpt.Client.Password,
+		yamlOpt.Daemon.Tags,
+	)
+	NewLikes(
+		yamlOpt.Daemon.Likes,
+		yamlOpt.Daemon.InPhoto,
+	)
+
+	login()
+
+	schedule()
 }
