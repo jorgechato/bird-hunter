@@ -16,8 +16,11 @@ var (
 	liked   = []string{}
 )
 
-func (c *Client) login() {
-	insta = goinsta.New(c.User, c.Password)
+func login() {
+	insta = goinsta.New(
+		client.Username,
+		client.Password,
+	)
 
 	if err := insta.Login(); err != nil {
 		panic(err)
@@ -26,8 +29,8 @@ func (c *Client) login() {
 	insta.SyncFeatures()
 }
 
-func (c *Client) getTagIds() {
-	for _, tag := range c.Tags {
+func getTagIds() {
+	for _, tag := range client.Tags {
 		wg.Add(2)
 		media, _ := insta.TagFeed(tag)
 
@@ -38,7 +41,7 @@ func (c *Client) getTagIds() {
 	wg.Wait()
 }
 
-func (c *Client) getPopularIds() {
+func getPopularIds() {
 	media, _ := insta.GetPopularFeed()
 
 	likePopularMedia(media.Items)
@@ -46,8 +49,8 @@ func (c *Client) getPopularIds() {
 
 func likePopularMedia(list []response.Item) {
 	for _, item := range list {
-		if !item.HasLiked && item.LikeCount > likes.Minimum {
-			if balance <= likes.NLikes {
+		if !item.HasLiked && item.LikeCount > likes.InPhoto {
+			if balance <= likes.Number {
 				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
 				balance++
@@ -60,9 +63,9 @@ func likeMedia(list []response.MediaItemResponse) {
 	defer wg.Done()
 
 	for _, item := range list {
-		if !item.HasLiked && item.LikeCount > likes.Minimum {
+		if !item.HasLiked && item.LikeCount > likes.InPhoto {
 			mu.Lock()
-			if balance <= likes.NLikes {
+			if balance <= likes.Number {
 				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
 				balance++

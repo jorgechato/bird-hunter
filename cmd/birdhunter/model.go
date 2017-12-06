@@ -3,29 +3,30 @@ package main
 import "strings"
 
 type Client struct {
-	User     string
+	Username string
 	Password string
 	Tags     []string
 }
 
 type Likes struct {
-	Minimum int
-	NLikes  int
+	InPhoto int
+	Number  int
 }
 
-func model(user string, pass string, tags string) {
+type YamlObj struct {
+}
+
+func NewClient(user string, pass string, tags string) {
 	client = Client{
-		User:     user,
+		Username: user,
 		Password: pass,
 		Tags:     strings.Split(tags, ","),
 	}
 }
 
-func Init() {
-	model(*user, *pass, *tags)
-
+func NewLikes(number int, min int) {
 	likes = Likes{
-		Minimum: *minlikes,
-		NLikes:  *nlikes,
+		InPhoto: min,
+		Number:  number,
 	}
 }
