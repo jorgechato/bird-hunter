@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func client(c HTTPClient, b interface{}) (resp *http.Response, err error) {
+func Client(c HTTPClient, b interface{}) (resp *http.Response, err error) {
 	cl := &http.Client{}
 
 	s, _ := json.Marshal(b)
@@ -41,7 +41,7 @@ func getJson(body io.ReadCloser, target interface{}) error {
 }
 
 func NewClient() {
-	res, _ := client(
+	res, _ := Client(
 		HTTPClient{
 			Url:    base_url,
 			Method: "GET",

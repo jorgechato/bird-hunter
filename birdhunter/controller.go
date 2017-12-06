@@ -6,7 +6,7 @@ func Login(user string, pass string) {
 	c.Name = user
 	c.Password = pass
 
-	client(
+	Client(
 		HTTPClient{
 			Url:         login_url,
 			Method:      "POST",
@@ -20,7 +20,7 @@ func Login(user string, pass string) {
 func GetItemsByTag(tag string) (Target, error) {
 	url := fmt.Sprintf(tag_url, tag)
 
-	res, err := client(
+	res, err := Client(
 		HTTPClient{
 			Url:             url,
 			Method:          "GET",

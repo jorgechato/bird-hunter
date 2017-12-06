@@ -13,7 +13,20 @@ type Likes struct {
 	Number  int
 }
 
-type YamlObj struct {
+type YamlOpt struct {
+	Client Client `yaml:"client"`
+	Daemon Daemon `yaml:"daemon"`
+}
+
+type Daemon struct {
+	InPhoto int `yaml:"min-likes-x-photo"`
+	Iter    Iter
+}
+
+type Iter struct {
+	Tags  []string `yaml:"tags"`
+	Likes int      `yaml:"likes"`
+	Hour  string   `yaml:"hour"`
 }
 
 func NewClient(user string, pass string, tags string) {

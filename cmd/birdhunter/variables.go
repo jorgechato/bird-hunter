@@ -13,6 +13,11 @@ var (
 		flag.ExitOnError,
 	)
 
+	updateCommand = flag.NewFlagSet(
+		"update",
+		flag.ExitOnError,
+	)
+
 	popularCommand = flag.NewFlagSet(
 		"popular",
 		flag.ExitOnError,
@@ -24,10 +29,16 @@ var (
 	)
 
 	//Custom Ptr
-	httpAddrPtr = foreverCommand.String(
-		"http",
-		"127.0.0.1:3999",
-		"HTTP service address (e.g., `127.0.0.1:3999`)",
+	notifyPtr = foreverCommand.Bool(
+		"notify",
+		false,
+		"Will notify to your telegram chat the status of the bot",
+	)
+
+	configFilePtr = foreverCommand.String(
+		"configFile",
+		"/config.yaml",
+		"Config file `location`",
 	)
 
 	listTagsPtr = tagCommand.String(
@@ -44,8 +55,12 @@ var (
 	likesPtr    int
 	minlikesPtr int
 
+	//http common
+	httpAddrPtr string
+
 	insta *goinsta.Instagram
 
-	client = Client{}
-	likes  = Likes{}
+	client  = Client{}
+	likes   = Likes{}
+	yamlOpt = YamlOpt{}
 )

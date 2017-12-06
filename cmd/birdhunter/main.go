@@ -27,6 +27,9 @@ func printDefaults() {
 	fmt.Printf("\nforever\n")
 	foreverReq()
 	foreverCommand.PrintDefaults()
+	fmt.Printf("\nupdate\n")
+	updateReq()
+	updateCommand.PrintDefaults()
 	os.Exit(0)
 }
 
@@ -41,6 +44,11 @@ func tagReq() {
 }
 
 func foreverReq() {
+	httpCommon(foreverCommand, 8080)
+}
+
+func updateReq() {
+	httpCommon(updateCommand, 3888)
 }
 
 func credentialCommon(command *flag.FlagSet) {
@@ -72,5 +80,14 @@ func likeCommon(command *flag.FlagSet) {
 		"min-likes-x-photo",
 		60,
 		"Minimum number of likes a image needs to have to like it (e.g., `60`)",
+	)
+}
+
+func httpCommon(command *flag.FlagSet, port int) {
+	command.StringVar(
+		&httpAddrPtr,
+		"http",
+		fmt.Sprintf("0.0.0.0:%d", port),
+		"HTTP service address (e.g., `localhost:8080`)",
 	)
 }

@@ -16,5 +16,5 @@ var (
 	x_www_form       = "application/x-www-form-urlencoded"
 	application_json = "application/json"
 
-	c = Client{}
+	c = C{}
 )

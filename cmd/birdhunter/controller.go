@@ -13,7 +13,6 @@ var (
 	wg      sync.WaitGroup
 	mu      sync.Mutex // guards balance
 	balance = 1
-	liked   = []string{}
 )
 
 func login() {
@@ -51,7 +50,6 @@ func likePopularMedia(list []response.Item) {
 	for _, item := range list {
 		if !item.HasLiked && item.LikeCount > likes.InPhoto {
 			if balance <= likes.Number {
-				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
 				balance++
 			}
@@ -66,7 +64,6 @@ func likeMedia(list []response.MediaItemResponse) {
 		if !item.HasLiked && item.LikeCount > likes.InPhoto {
 			mu.Lock()
 			if balance <= likes.Number {
-				liked = append(liked, birdhunter.Slug(item.Code))
 				insta.Like(item.ID)
 				balance++
 			}
@@ -75,9 +72,13 @@ func likeMedia(list []response.MediaItemResponse) {
 	}
 }
 
-func printOut() {
-	fmt.Printf("\nTotal likes: %d\n\n", len(liked))
-	for _, item := range liked {
-		fmt.Println(item)
-	}
+func updateConfig(url string) {
+	birdhunter.Client(
+		birdhunter.HTTPClient{
+			Url:         url,
+			Method:      "POST",
+			ContentType: birdhunter.application_json,
+		},
+		nil,
+	)
 }

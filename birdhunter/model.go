@@ -13,7 +13,7 @@ type HTTPClient struct {
 	Cookies         []*http.Cookie
 }
 
-type Client struct {
+type C struct {
 	Name     string
 	Password string
 	Cookies  []*http.Cookie

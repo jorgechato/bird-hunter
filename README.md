@@ -8,11 +8,90 @@ An easy tool to like pictures from Instagram without the official API
 #### Local
 ```zsh
 $ go get github.com/jorgechato/birdhunter/cmd/birdhunter
-$ birdhunter -u username -p password -tags tag1,tag2,tag3 -likes 60 -likesxpic 20
-$ birdhunter -u username -p password -popular -likes 60 -likesxpic 20
 
+$ birdhunter tag -u username -p password -list tag1,tag2,tag3 -likes 60 -min-likes-x-photo 20
+$ birdhunter popular -u username -p password -likes 60 -min-likes-x-photo 20
 ```
-## Variables
-Variables in config.yaml file.
+#### Docker
 ```zsh
+$ docker build -t birdhunter .
+
+$ docker run -d \
+-p 3888:8080 \
+--name like-birdhunter\
+birdhunter
+
+# or
+
+$ docker-compose up -d
+```
+
+## Use
+```zsh
+$ birdhunter -h
+
+# output
+
+popular
+  -likes 60
+        Maximum number of likes per hour (e.g., 60) (default 60)
+  -min-likes-x-photo 60
+        Minimum number of likes a image needs to have to like it (e.g., 60) (default 60)
+  -p password
+        Instagram password
+  -u username
+        Instagram username
+
+tag
+  -likes 60
+        Maximum number of likes per hour (e.g., 60) (default 60)
+  -list tag1,tag2,tag3
+        List of tags witch will be liked split by , (e.g., tag1,tag2,tag3)
+  -min-likes-x-photo 60
+        Minimum number of likes a image needs to have to like it (e.g., 60) (default 60)
+  -p password
+        Instagram password
+  -u username
+        Instagram username
+
+forever
+  -configFile location
+        Config file location (default "/config.yaml")
+  -http localhost:8080
+        HTTP service address (e.g., localhost:8080) (default "0.0.0.0:8080")
+```
+
+## Variables
+Variables in config.yaml file. In order to request a valid TOKEN create a bot and you will get the ID if you visit https://api.telegram.org/bot<TOKEN>/getUpdates.
+```zsh
+credentials:
+  username: ""
+  password: ""
+
+notify:
+  token: ""
+  id: ""
+
+daemon:
+  min-likes-x-photo: 20
+  - tags:
+      - ""
+      - ""
+    hour: "07:00"
+    likes: 60
+  - tags:
+      - ""
+      - ""
+    hour: "10:00"
+    likes: 60
+  - tags:
+      - ""
+      - ""
+    hour: "20:00"
+    likes: 60
+  - tags:
+      - ""
+      - ""
+    hour: "22:00"
+    likes: 60
 ```

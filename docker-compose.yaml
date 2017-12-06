@@ -1,0 +1,14 @@
+version: "2"
+
+
+services:
+  like:
+    image: birdhunter
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /go/bin/birdhunter forever
+    ports:
+      - 3888:8080
+    volumes:
+      - ./config.yaml:/config.yaml

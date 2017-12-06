@@ -25,12 +25,17 @@ func handler() {
 		tagCommand.Parse(os.Args[2:])
 
 		tag()
+	case "update":
+		fmt.Println("Updating the configuration file...")
+		updateReq()
+
+		update()
 	case "forever":
 		foreverReq()
 
 		foreverCommand.Parse(os.Args[2:])
 
-		//TODO: add server forever
+		forever()
 	default:
 		printDefaults()
 	}
@@ -66,4 +71,17 @@ func tag() {
 	login()
 
 	getTagIds()
+}
+
+func update() {
+	updateConfig(
+		fmt.Sprintf(
+			"%v/update",
+			httpAddrPtr,
+		),
+	)
+}
+
+func forever() {
+	start(httpAddrPtr)
 }
